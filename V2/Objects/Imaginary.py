@@ -9,4 +9,8 @@ class Imaginary:
 
     def parse(self, str):
 
+
+
+        evaluate
+
         return[1,2]
