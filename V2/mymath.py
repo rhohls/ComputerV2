@@ -53,5 +53,7 @@ def operation(num1, num2, operand):
         return (num1 / num2)
     elif operand == '%':
         return (num1 % num2)
+    elif operand == '^':
+        return custom_power(num1, num2)
     else:
         raise Exception ("opperand doesnt exist")

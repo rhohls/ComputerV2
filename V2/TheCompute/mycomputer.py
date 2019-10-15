@@ -74,6 +74,19 @@ class Computer:
             i += 1
         return token_list
 
+    def mini_operation(self, equation, list_opperands):
+        i = 0
+        new_equation = []
+        while i < len(equation):
+            if equation[i] in list_opperands:
+                value = math.operation (new_equation[-1], equation[i + 1], equation[i])
+                new_equation[-1] = value
+                i += 1
+            else:
+                new_equation.append(equation[i])
+            i += 1
+
+        return new_equation
 
     def apply_operations(self, equation):
         i = 0
@@ -84,50 +97,16 @@ class Computer:
                 equation[i] = self.apply_operations(equation[i])
             i += 1
 
-        i = 0
-        new_equation = []
+        equation = self.mini_operation(equation, ['^'])
+        # print("post power", equation)
+        equation = self.mini_operation(equation, ['*', '/', '%'])
+        print("post mult", equation)
+        equation = self.mini_operation(equation, ['+', '-'])
 
-        # ^ (power)
-        while i < len(equation):
-            if equation[i] == '^':
-                value = math.custom_power(equation[i-1], equation[i+1])
-                new_equation[-1] = value
-                i += 1
-            else:
-                new_equation.append(equation[i])
-            i += 1
 
-        equation = new_equation
-        i = 0
-        new_equation = []
-
-        # * / % multiplication
-        while i < len(equation):
-            if equation[i] in ['*', '/', '%']:
-                value = math.operation (equation[i - 1], equation[i + 1], equation[i])
-                new_equation[-1] = value
-                i += 1
-            else:
-                new_equation.append(equation[i])
-            i += 1
-
-        equation = new_equation
-        i = 0
-        new_equation = []
-
-        # + - add
-        while i < len(equation):
-            if equation[i] in ['+', '-']:
-                value = math.operation(equation[i - 1], equation[i + 1], equation[i])
-                new_equation[-1] = value
-                i += 1
-            else:
-                new_equation.append(equation[i])
-            i += 1
-
-        if len(new_equation) > 1:
+        if len(equation) > 1:
             raise Exception ("This shouldnt be happning")
-        return new_equation[0]
+        return equation[0]
 
 
     def read_loop(self):
