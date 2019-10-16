@@ -1,5 +1,5 @@
 import re
-
+import pytest
 from V2.Objects.Imaginary import Imaginary
 from V2.Objects.Matrix import Matrix
 import V2.mymath as math
@@ -79,8 +79,13 @@ class Computer:
         new_equation = []
         while i < len(equation):
             if equation[i] in list_opperands:
-                value = math.operation (new_equation[-1], equation[i + 1], equation[i])
-                new_equation[-1] = value
+                #TODO handle bad syntax multiplication vs negative numbers
+                if len(new_equation) > 1:
+                    value = math.operation (new_equation[-1], equation[i + 1], equation[i])
+                    new_equation[-1] = value
+                else:
+                    value = math.operation(0, equation[i + 1], equation[i])
+                    new_equation.append(value)
                 i += 1
             else:
                 new_equation.append(equation[i])
@@ -100,57 +105,60 @@ class Computer:
         equation = self.mini_operation(equation, ['^'])
         # print("post power", equation)
         equation = self.mini_operation(equation, ['*', '/', '%'])
-        print("post mult", equation)
+        # print("post mult", equation)
         equation = self.mini_operation(equation, ['+', '-'])
-
 
         if len(equation) > 1:
             raise Exception ("This shouldnt be happning")
         return equation[0]
 
+    def handle_input(self, inp):
+        # return value
+        if len(re.findall('=', inp)) == 0:
+            # print(self.variables)
+            if inp.lower() in self.variables:
+                value = self.variables[inp.lower()]
+                self.print_value(value)
+            else:
+                print("Variable does not exist")
+        # assign value
+        elif len(re.findall('=', inp)) == 1:
+            key, rhs = [x.strip().lower() for x in inp.split('=')]
+            value = self.evaluate(rhs)
+            self.variables[key.lower()] = value
+            self.print_value(value)
+        # inline equation
+
+    def print_value(self, value):
+        if value.is_integer():
+            print(int(value))
+        else:
+            print(str(value))
+
+    def evaluate(self, input):
+        out = self.tokenize(input)
+        # print("tokenize list is: ", out)
+        out = self.replace_known_variables(out)
+        # print("replace var list is: ", out)
+        result = self.apply_operations(out)
+        # print("final result is: ", out)
+
+        return result
 
     def read_loop(self):
         inp = None
 
-        self.variables['a'] = 3
-
-        inp = "4 - 5 + (1 + 2)^2 - 4 * (3 * 2 + a)"
-        print("Intial input str: " + inp)
-        # inp = "1 + 2 + 3 + 4"
-        out = self.tokenize(inp)
-        print("tokenize list is: ", out)
-
-        out = self.replace_known_variables(out)
-        print("replace var list is: ", out)
-
-        out = self.apply_operations(out)
-        print("final result is: ", out)
-
-
-
-
         # if len(re.findall(']', input_string)) >= 1:
         #     output = Matrix(input_string)
 
-        # while inp != "exit":
-        #     inp = input()
-            # if inp.lower() == "exit":
-            #     break
-            #
-            # # return value
-            # if len(re.findall('=', inp)) == 0:
-            #     if inp in self.variables:
-            #         print("Value of \'" + inp + "\' is: \n" + str(self.variables[key]) + "\"")
-            #     else:
-            #         print("Variable doesnt exist")
-            # # assign value
-            # elif len(re.findall('=', inp)) == 1:
-            #     key, rhs = [x.strip().lower() for x in inp.split('=')]
-            #
-            #     value = self.evaluate(rhs)
-            #     self.variables[key] = value
-            #
-            # # inline equation
+        while inp != "exit":
+            inp = input()
+            if inp.lower() == "exit":
+                break
+            else:
+                self.handle_input(inp)
+
+
 
     @staticmethod
     def str_from_list(mylist, start, end):
