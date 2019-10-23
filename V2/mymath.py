@@ -43,6 +43,7 @@ def custom_power(number, power):
     return number
 
 def operation(num1, num2, operand):
+    # print("num1: ", num1, " num2: ", num2)
     if operand == '+':
         return (num1 + num2)
     elif operand == '-':

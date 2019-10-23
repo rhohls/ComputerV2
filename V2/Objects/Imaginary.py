@@ -1,6 +1,7 @@
+from V2.Objects.SimpleEquation import SimpleEquation
 
 
-class Imaginary:
+class Imaginary(SimpleEquation):
     def __init__(self, str):
         self.imaginary, self.real = self.parse(str)
 

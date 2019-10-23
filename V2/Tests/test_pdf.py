@@ -40,7 +40,7 @@ def test_using_variables(capsys, computer):
     computer.handle_input("varC =2 * varB")
     assert capsys.readouterr().out == "36\n"
     computer.handle_input("varD = 2 *(2 + 4 *varC -4 /3)")
-    assert capsys.readouterr().out == "289.333333333\n"
+    assert capsys.readouterr().out == "289.33333\n"
 
 
 def test_imaginary(capsys, computer):
@@ -114,6 +114,7 @@ def test_function_evaluation(capsys, computer):
     computer.handle_input("funC(3) = ?")
     assert capsys.readouterr().out == "15\n"
 
+
 def test_ploynomial(capsys, computer):
     computer.handle_input("funA(x) = x^2 + 2x + 1")
     assert capsys.readouterr().out == "x^2 + 2x + 1\n"
@@ -121,3 +122,10 @@ def test_ploynomial(capsys, computer):
     assert capsys.readouterr().out == "0\n"
     computer.handle_input("funA(x) = y ?")
     assert capsys.readouterr().out == "x^2 + 2x + 1 = 0\nA solution on R :\n-1\n"
+
+#
+def test_custom(capsys, computer):
+    computer.handle_input("y=2")
+    assert capsys.readouterr().out == "2\n"
+    computer.handle_input("a = 2* y + 4 -2 * 4+9/3 + 2y")
+    assert capsys.readouterr().out == "7\n"

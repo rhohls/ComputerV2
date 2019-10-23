@@ -1,4 +1,7 @@
-class Matrix:
+from V2.Objects.SimpleEquation import SimpleEquation
+
+
+class Matrix(SimpleEquation):
 
     def __init__(self, input_string):
         self.matrix = []
@@ -18,8 +21,18 @@ class Matrix:
     def __str__(self):
         mystr = str(self.matrix)
         mystr = mystr.replace("],", "]\n")
+        mystr = mystr.replace(",", " ,")
+
+        mystr = mystr.replace("]]", "]")
+        mystr = mystr.replace("[[", "[ ")
+
+        mystr = mystr.replace(" [", "[ ")
+        mystr = mystr.replace("]", " ]")
+        #
+        #
         return mystr
 
+    #call computer evaluate function
     @staticmethod
     def evaluate(string_number):
         if string_number.isdigit():
