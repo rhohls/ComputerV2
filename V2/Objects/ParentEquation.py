@@ -1,27 +1,37 @@
 import V2.mymath as math
 import re
 from abc import ABC, abstractmethod
+# from V2.Objects.Function import Function
 
-
-class SimpleEquation(ABC):
-    def __init__(self,input_string, token_list=None):
-        self.input_string = input_string
+class ParentEquation(ABC):
+    def __init__(self, raw_input, token_list=None):
+        self.raw_input = raw_input
         self.precision = 5
+        self.token_list = None
+        self.debug = 0
+        self.value = None
+
+        self.token_list = self.tokenize(self.raw_input)
+
 
     @abstractmethod
     def reduce(self):
         pass
 
-    def replace_known_variables(self, variables):
+    def replace_known_variables(self, token_list, variables):
         i = 0
 
-        while i < len(self.token_list):
-            if type(self.token_list[i]) is list:
-                self.replace_known_variables(self.token_list[i])
-            elif self.token_list[i] in variables:
-                self.token_list[i] = variables[self.token_list[i]]
+        while i < len(token_list):
+            if type(token_list[i]) is list:
+                self.replace_known_variables(token_list[i], variables)
+            elif token_list[i] in variables:
+                if isinstance(variables[token_list[i]], Function):
+                    raise Exception ("Cannot assign function")
+                str_new_val = str(variables[token_list[i]])
+                token_list[i] = self.tokenize(str_new_val)
 
             i += 1
+
         return self.token_list
 
     def mini_operation(self, equation, list_opperands):
@@ -40,7 +50,7 @@ class SimpleEquation(ABC):
                 # if len(new_equation) >= 1 and i > 1:
                 else:
                     #value from opperation = previously calc values [op] next value
-                    #TODO check i+1 is a number
+                    #TODO check if i+1 is a number
                     value = math.operation(new_equation[-1], equation[i + 1], equation[i])
                     new_equation[-1] = value
                 i += 1
@@ -88,8 +98,8 @@ class SimpleEquation(ABC):
                     j += 1
                     if j == len(split):
                         raise Exception("Poorly formatted input: Missing parenthesis")
-                teststr = SimpleEquation.str_from_list(split, i, j)
-                cust_list = SimpleEquation.tokenize(teststr)
+                teststr = ParentEquation.str_from_list(split, i, j)
+                cust_list = ParentEquation.tokenize(teststr)
 
                 new_list.append(cust_list)
                 i = j

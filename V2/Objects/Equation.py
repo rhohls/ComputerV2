@@ -1,4 +1,4 @@
-from V2.Objects.SimpleEquation import SimpleEquation
+from V2.Objects.ParentEquation import ParentEquation
 
 # out = self.tokenize(input)
 # # print("tokenize list is: ", out)
@@ -8,17 +8,14 @@ from V2.Objects.SimpleEquation import SimpleEquation
 
 
 # print("final result is: ", out)
-class Equation(SimpleEquation):
+class Equation(ParentEquation):
 
     def __init__(self, raw_input):
-        self.raw_input = raw_input
-        self.tokenize = None
-        self.value = None
+        super().__init__(raw_input)
 
     def reduce(self):
-        self.tokenize = self.tokenize(self.raw_input)
-        self.value = self.apply_operations(self.tokenize)
+        self.value = self.apply_operations(self.token_list)
 
     def __str__(self):
         st = (("%0.*f" % (self.precision, self.value)).rstrip('0').rstrip('.'))
-        return
+        return st

@@ -1,7 +1,7 @@
-from V2.Objects.SimpleEquation import SimpleEquation
+from V2.Objects.ParentEquation import ParentEquation
 
 
-class Function(SimpleEquation):
+class Function(ParentEquation):
     def __init__(self,input_string):
         pass
 

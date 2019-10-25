@@ -46,10 +46,12 @@ def test_using_variables(capsys, computer):
 def test_imaginary(capsys, computer):
     computer.handle_input("varA = 2*i + 3")
     assert capsys.readouterr().out == "3 + 2i\n"
-    computer.handle_input("-4i - 4")
+    computer.handle_input("varB = -4i - 4")
     assert capsys.readouterr().out == "-4 - 4i\n"
     computer.handle_input("y = 2 * i - 4")
     assert capsys.readouterr().out == "-4 + 2i\n"
+
+
 
 
 def test_matrix(capsys, computer):
@@ -128,4 +130,7 @@ def test_custom(capsys, computer):
     computer.handle_input("y=2")
     assert capsys.readouterr().out == "2\n"
     computer.handle_input("a = 2* y + 4 -2 * 4+9/3 + 2y")
+    assert capsys.readouterr().out == "7\n"
+
+    computer.handle_input("varA = 2 * i + 32i + 4 * (i + 1)/ (3 + 2)")
     assert capsys.readouterr().out == "7\n"

@@ -1,5 +1,6 @@
 import re
 
+from V2.Objects.ParentEquation import ParentEquation
 from V2.Objects.Equation import Equation
 from V2.Objects.Function import Function
 from V2.Objects.Imaginary import Imaginary
@@ -14,7 +15,6 @@ class Computer:
         self.illegal_variables = ['i']
         self.debug = 0
         self.precision = 5
-
 
     def read_loop(self):
         inp = None
@@ -45,6 +45,7 @@ class Computer:
             print("EVALUATE AND SOLVE")
         else:
             print("Error handling input")
+        return
 
     def assign_values(self, inp):
         key, rhs = [x.strip().lower() for x in inp.split('=')]
@@ -70,21 +71,22 @@ class Computer:
         else:
             return_info = Equation(raw_input)
 
-        return_info.replace_known_variables(self.variables)
-
+        return_info.token_list = return_info.replace_known_variables(return_info.token_list, self.variables)
         return_info.reduce()
 
         return return_info
 
     def print_value(self, value):
-        if isinstance(value, int):
-            print(int(value))
-        elif isinstance(value, float):
-            print(("%0.*f" % (self.precision, value)).rstrip('0').rstrip('.'))
-        else:
-            print(str(value))
+        # if isinstance(value, int):
+        #     print(int(value))
+        # elif isinstance(value, float):
+        #     print(("%0.*f" % (self.precision, value)).rstrip('0').rstrip('.'))
+        # else:
+        print(str(value))
 
     def is_imaginary(self, raw_input):
-        token_list = self.tokenize(raw_input)
-        if self.debug : print("tokenize list is: ", token_list)
-        pass
+        token_list = ParentEquation.tokenize(raw_input)
+        if "i" in token_list:
+            return True
+        return False
+
