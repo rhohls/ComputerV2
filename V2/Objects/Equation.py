@@ -10,6 +10,9 @@ from V2.Objects.ParentEquation import ParentEquation
 # print("final result is: ", out)
 class Equation(ParentEquation):
 
+    def solve(self):
+        pass
+
     def __init__(self, raw_input):
         super().__init__(raw_input)
 

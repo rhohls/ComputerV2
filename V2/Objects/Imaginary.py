@@ -10,16 +10,11 @@ class Imaginary(ParentEquation):
     def reduce(self):
         i = 0
 
-        print (self.token_list)
-
-        while i < len(self.token_list):
-
-
-            i += 1
 
 
 
-        return token_list
+
+        return None
 
     def __str__(self):
         return "Not Implimented"

@@ -2,7 +2,8 @@ import re
 
 from V2.Objects.ParentEquation import ParentEquation
 from V2.Objects.Equation import Equation
-from V2.Objects.Function import Function
+# from V2.Objects.Functions import Functions
+from V2.Objects.ParentEquation import Functions
 from V2.Objects.Imaginary import Imaginary
 from V2.Objects.Matrix import Matrix
 
@@ -27,8 +28,13 @@ class Computer:
                 self.handle_input(inp)
 
     def handle_input(self, inp):
+        if inp.lower() == "variables":
+            for var in self.variables:
+                print(var, ":")
+                self.print_value(self.variables[var])
+
         # return value
-        if len(re.findall('=', inp)) == 0:
+        elif len(re.findall('=', inp)) == 0:
             # print(self.variables)
             if inp.lower() in self.variables:
                 value = self.variables[inp.lower()]
@@ -36,13 +42,20 @@ class Computer:
             else:
                 print("Variable does not exist")
 
+        # inline equation
+        elif len(re.findall(r'\?', inp)) == 1:
+            print("SOLVING")
+            if inp.lower() in self.variables:
+                variable = self.variables[inp.lower()]
+                variable.ev
+            else:
+                print("Variable does not exist")
+
         # assign value
         elif len(re.findall('=', inp)) == 1:
             self.assign_values(inp)
 
-        # inline equation
-        elif len(re.findall(r'\?', inp)) == 1:
-            print("EVALUATE AND SOLVE")
+
         else:
             print("Error handling input")
         return
@@ -57,16 +70,30 @@ class Computer:
             self.variables[key.lower()] = value
             self.print_value(value)
 
+    def solve(self, input):
+        eq = input.split('=')
+        if len(eq) != 2:
+            raise Exception()
+        if eq[1].strip() == '?':
+            variable = self.findvariable(eq[0])
+            variable.solve()
+        else:
+            print("COMPLEX SOLVING")
+
+    def findvariable(self, key):
+
+
+
     def evaluate(self, key, raw_input):
         return_info = None
         ##function or matrix
         if "[" in raw_input:
             return_info = Matrix(raw_input)
-        elif "fun(" in key:
-            return_info = Function(key, raw_input)
+        elif "(" in key:
+            return_info = Functions(raw_input, key, self.variables)
 
         #imaginary or basic
-        if self.is_imaginary(raw_input):
+        elif self.is_imaginary(raw_input):
             return_info = Imaginary(raw_input)
         else:
             return_info = Equation(raw_input)
@@ -89,4 +116,10 @@ class Computer:
         if "i" in token_list:
             return True
         return False
+
+    def info(self):
+        print("i is not a valid variable name")
+        print("XXX(X) will be interpreted as a function not XXX * (X)")
+
+
 

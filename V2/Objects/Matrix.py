@@ -3,6 +3,10 @@ from V2.Objects.ParentEquation import ParentEquation
 
 class Matrix(ParentEquation):
 
+#cross_product : MxN * NxP = MxP
+
+
+
     def __init__(self, input_string):
         self.matrix = []
         self.size = (0, 0)
@@ -39,3 +43,4 @@ class Matrix(ParentEquation):
             return int(string_number)
         else:
             return None
+

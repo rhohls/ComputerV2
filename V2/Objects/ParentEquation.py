@@ -1,7 +1,7 @@
 import V2.mymath as math
 import re
 from abc import ABC, abstractmethod
-# from V2.Objects.Function import Function
+# from .Functions import Functions
 
 class ParentEquation(ABC):
     def __init__(self, raw_input, token_list=None):
@@ -13,9 +13,12 @@ class ParentEquation(ABC):
 
         self.token_list = self.tokenize(self.raw_input)
 
-
     @abstractmethod
     def reduce(self):
+        pass
+
+    @abstractmethod
+    def solve(self):
         pass
 
     def replace_known_variables(self, token_list, variables):
@@ -25,7 +28,7 @@ class ParentEquation(ABC):
             if type(token_list[i]) is list:
                 self.replace_known_variables(token_list[i], variables)
             elif token_list[i] in variables:
-                if isinstance(variables[token_list[i]], Function):
+                if isinstance(variables[token_list[i]], Functions):
                     raise Exception ("Cannot assign function")
                 str_new_val = str(variables[token_list[i]])
                 token_list[i] = self.tokenize(str_new_val)
@@ -134,3 +137,77 @@ class ParentEquation(ABC):
             newlist += mylist[i]
         # print("my new list is: " + newlist)
         return newlist
+
+
+
+
+
+
+
+
+
+
+"""
+Circular reasoning sucks: move below into it owns file
+"""
+
+
+
+
+
+
+class Functions(ParentEquation):
+
+    def __init__(self,raw_input, key, variable_list):
+        super().__init__(raw_input)
+        self.function_name, self.function_vars = self.isloate_key(key)
+
+        self.check_used_variables(self.token_list, variable_list)
+
+
+    def reduce(self):
+        pass
+
+    def isloate_key(self, key):
+        func_name, func_variable = re.findall(r"([A-z]+)\((.*?)\)", key)[0]
+        func_variable = func_variable.split(',')
+        return func_name, func_variable
+
+    def check_used_variables(self, token_list, function_var):
+        for check in token_list:
+            if type(check) is list:
+                self.check_used_variables(check, function_var)
+            elif any(x in token_list for x in function_var):
+                raise Exception("Function variable already exists")
+        return
+
+    def solve(self, raw_input):
+        pass
+
+    def evaluate(self, input_variables):
+        if len(input_variables) != self.function_vars:
+            raise Exception("Function input variables not same as stored")
+
+        evaluation_vars = {}
+        for i in range(input_variables):
+            evaluation_vars[self.function_vars[i]] = float(input_variables[i])
+
+        eval_token_list = self.replace_known_variables(self.token_list, evaluation_vars)
+        ans = self.apply_operations(eval_token_list)
+        print("ans is", ans)
+        return  ans
+
+
+    def __str__(self):
+        str1 = ""
+        str1 += self.function_name + '(' + ' '.join(self.function_vars) + ') = '
+        str1 += " "
+        for x in self.token_list:
+            if isinstance(x, str):
+                str1 += x
+            else:
+                str1 += str(x)
+            str1 += " "
+
+        return str1
+

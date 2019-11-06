@@ -52,8 +52,6 @@ def test_imaginary(capsys, computer):
     assert capsys.readouterr().out == "-4 + 2i\n"
 
 
-
-
 def test_matrix(capsys, computer):
     computer.handle_input("varA = [[2,3];[4,3]]")
     assert capsys.readouterr().out == "[ 2 , 3 ]\n[ 4 , 3 ]\n"
@@ -125,12 +123,12 @@ def test_ploynomial(capsys, computer):
     computer.handle_input("funA(x) = y ?")
     assert capsys.readouterr().out == "x^2 + 2x + 1 = 0\nA solution on R :\n-1\n"
 
-#
+
 def test_custom(capsys, computer):
     computer.handle_input("y=2")
     assert capsys.readouterr().out == "2\n"
     computer.handle_input("a = 2* y + 4 -2 * 4+9/3 + 2y")
     assert capsys.readouterr().out == "7\n"
 
-    computer.handle_input("varA = 2 * i + 32i + 4 * (i + 1)/ (3 + 2)")
-    assert capsys.readouterr().out == "7\n"
+    # computer.handle_input("varA = 2 * i + 32i + 4 * (i + 1)/ (3 + 2)")
+    # assert capsys.readouterr().out == "7\n"
